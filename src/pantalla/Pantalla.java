@@ -9,11 +9,7 @@ public class Pantalla extends JPanel {
 
 
     public void paint(Graphics g){
-        for (int i=0; i <= 49; i++){
-            for (int j=0; j <= 49;j++){
-                matriz[i][j]=1;
-            }
-        }
+
         super.paintComponent(g);
 
         for (int i=0;i<=49;i++){
@@ -24,6 +20,11 @@ public class Pantalla extends JPanel {
             }
         }
 
+
+    }
+    public void actualizarMatriz(int[][] matrizNueva){
+        matrizNueva=matriz;
+        repaint();
 
     }
     public Color codificarColor(int codigo) {
