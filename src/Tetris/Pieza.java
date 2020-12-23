@@ -147,12 +147,9 @@ public class Pieza {
                 centro[0]=centro[0]-1;
                 this.actualizarPieza();
             }
-
-
         }
 
         if (direccion=="D"){
-
             if (centro[0]+1!=19){
                 centro[0]=centro[0]+1;
                 this.actualizarPieza();

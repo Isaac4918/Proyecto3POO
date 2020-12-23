@@ -5,16 +5,17 @@ import pantalla.Pantalla;
 import pantalla.Ventana;
 
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public class Juego {
     public MatrisTetris Matriz50pxls=new MatrisTetris();
-    Pantalla pantalla=new Pantalla();
+    Ventana ventana;
 
 
     public int[][] matetriz=new int[10][20];
     public int[][] matrizAcumulados=new int[10][20];
 
-    public void empezar(){
+    public void empezar() throws InterruptedException {
         this.crearMatriz();
         this.mostrarMatriz();
         CableApantalla cable=new CableApantalla();
@@ -25,19 +26,21 @@ public class Juego {
 
         insertarPieza(pieza);
         mostrarMatriz();
-        cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
-        //Ventana ventana=new Ventana();
-        //ventana.refrescar(cable.MatrizPantalla);
-        cable.mostrarMatriz();
+        ventana=new Ventana();
+        while(true){
+            System.out.println("bajando");
+            moverSprite("A", pieza);
+            revisarFondo(pieza);
+            cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
+            cable.mostrarMatriz();
+            ventana.refrescar(cable.MatrizPantalla);
+            TimeUnit.SECONDS.sleep(1);
 
-        /*
-        mostrarMatriz();
-    //AL MOVER LA PIEZA HAY QUE REVISARLA CON
-        //rotarSprite(pieza);
+        }
 
-        //moverSprite("D", pieza);
-        tirarPieza(pieza);
-*/
+
+
+
     }
 
     public boolean revisarFondo(Pieza pieza){
@@ -98,10 +101,10 @@ public class Juego {
     }
 
     public void moverSprite(String direccion,Pieza pieza){
-            matetriz[pieza.centro[0]][pieza.centro[1]]=0;
-            matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=0;
-            matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=0;
-            matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=0;
+            matetriz[pieza.centro[0]][pieza.centro[1]]=5;
+            matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=5;
+            matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=5;
+            matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=5;
 
             pieza.moverPieza(direccion);
 
@@ -192,7 +195,7 @@ public class Juego {
     public void crearMatriz(){
         for (int i=0; i <= 19; i++){
             for (int j=0; j <= 9;j++){
-                matetriz[j][i]=0;
+                matetriz[j][i]=5;
             }
         }
         for (int i=0; i <= 19; i++){
@@ -254,7 +257,7 @@ public class Juego {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
     Juego game=new Juego();
         game.empezar();
     }}

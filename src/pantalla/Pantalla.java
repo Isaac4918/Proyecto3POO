@@ -7,14 +7,17 @@ public class Pantalla extends JPanel {
     private JPanel contenido;
     public int[][] matriz=new int[50][50];
 
+    public Pantalla(int[][] matriz) {
+        this.matriz = matriz;
+    }
+
 
     public void paint(Graphics g){
 
         super.paintComponent(g);
 
         for (int i=0;i<=49;i++){
-            for (int j=0;j<=49
-                    ;j++){
+            for (int j=0;j<=49;j++){
                 g.setColor(codificarColor(matriz[i][j]));
                 g.fillRect(i*12,j*12,12,12);
             }
@@ -22,8 +25,10 @@ public class Pantalla extends JPanel {
 
 
     }
+
+
     public void actualizarMatriz(int[][] matrizNueva){
-        matrizNueva=matriz;
+        matriz=matrizNueva;
         repaint();
 
     }
