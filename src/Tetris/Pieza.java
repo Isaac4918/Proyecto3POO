@@ -158,7 +158,31 @@ public class Pieza {
 
     }
     public void rotarPieza(int forma){
-        if (caso==4){
+        System.out.println("rotando en x:  "+centro[0]);
+        if (forma==4){
+            if (caso==1 || caso==3){
+                if (centro[0]==9){
+                    centro[0]=8;
+                    caso = 1;
+                    this.actualizarPieza();
+                }
+                if (centro[0]<2){
+                    centro[0]=2;
+                    caso = 1;
+                    this.actualizarPieza();
+                }
+            }
+        }
+        if (forma==2){
+            if (caso==1 || caso==3){
+                if (centro[0]==9){
+                    centro[0]=8;
+                    caso = 1;
+                    this.actualizarPieza();
+                }
+            }
+        }
+        if (caso==3){
             caso=0;
             this.actualizarPieza();
         }else {
@@ -171,8 +195,8 @@ public class Pieza {
             centro[0]=4;
             centro[1]=1;
             caso=1;
-            int randomNum = ThreadLocalRandom.current().nextInt(1, 3 + 1);
-            forma=randomNum;
+            int randomNum = ThreadLocalRandom.current().nextInt(1, 5);
+            forma=4;
             this.actualizarPieza();
 
 

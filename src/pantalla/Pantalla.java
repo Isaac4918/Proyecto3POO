@@ -6,6 +6,7 @@ import java.awt.*;
 public class Pantalla extends JPanel {
     private JPanel contenido;
     public int[][] matriz=new int[50][50];
+    public int[][] matrizFondo=new int[50][50];
 
     public Pantalla(int[][] matriz) {
         this.matriz = matriz;
@@ -34,37 +35,37 @@ public class Pantalla extends JPanel {
     }
     public Color codificarColor(int codigo) {
         switch (codigo) {
-            case 1:
+            case 0:
                 return Color.BLACK;
-            case 2:
+            case 1:
                 return Color.BLUE;
-            case 3:
+            case 2:
                 return Color.CYAN;
-            case 4:
+            case 3:
                 return Color.DARK_GRAY;
-            case 5:
+            case 4:
                 return Color.LIGHT_GRAY;
-            case 6:
+            case 5:
                 return Color.GREEN;
-            case 7:
+            case 6:
                 return Color.MAGENTA;
-            case 8:
+            case 7:
                 return Color.ORANGE;
-            case 9:
+            case 8:
                 return Color.PINK;
-            case 10:
+            case 9:
                 return Color.RED;
-            case 11:
+            case 10:
                 return Color.WHITE;
-            case 12:
+            case 11:
                 return Color.YELLOW;
-            case 13:
+            case 12:
                 return Color.decode("#808000");
-            case 14:
+            case 13:
                 return Color.decode("#752C00");
-            case 15:
+            case 14:
                 return Color.decode("#000080");
-            case 16:
+            case 15:
                 return Color.decode("#800080");
             default:
                 throw new IllegalStateException("Unexpected value: " + codigo);

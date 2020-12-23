@@ -1,45 +1,108 @@
 package Tetris;
 
 
+import control.VentanaControl;
 import pantalla.Pantalla;
 import pantalla.Ventana;
 
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public class Juego {
+public class Juego extends Thread {
     public MatrisTetris Matriz50pxls=new MatrisTetris();
-    Ventana ventana;
-
-
+    Ventana ventana=new Ventana();;
+    CableApantalla cable=new CableApantalla();
+    Pieza pieza=new Pieza(1);
+    VentanaControl control=new VentanaControl();
+    public LinkedList listaCambios=new LinkedList();
     public int[][] matetriz=new int[10][20];
     public int[][] matrizAcumulados=new int[10][20];
 
     public void empezar() throws InterruptedException {
         this.crearMatriz();
-        this.mostrarMatriz();
-        CableApantalla cable=new CableApantalla();
-
-
-        Pieza pieza=new Pieza(1);
-        System.out.println("len : "+matetriz[0].length);
-
+        cable.insertarMatriz(cable.ReescalarPixeles(matetriz), 2);
+        cable.mostrarMatriz();
+        ventana.introducirFondo(cable.MatrizPantalla);
+        //generarCambios();
+        //this.mostrarMatriz();
         insertarPieza(pieza);
-        mostrarMatriz();
-        ventana=new Ventana();
+        //mostrarMatriz();
+        //generarCambios();
+
+        //rotarSprite(pieza);
+        //mostrarMatriz();
+        int boton=0;
         while(true){
-            System.out.println("bajando");
+            //System.out.println("boton: "+boton);
+            if (boton!=control.tecla){
+                boton=control.tecla;
+                System.out.println("boton: "+boton);
+                if (boton==37){
+                    System.out.println("BOTON IZQUIERDO");
+                    botonIzquierdo(pieza);
+                    generarCambios();
+                }
+                if (boton==39){
+                    System.out.println("BOTON DERECHO");
+                    botonDerecho(pieza);
+                    generarCambios();
+                }
+                if (boton==38){
+                    rotarSprite(pieza);
+                    generarCambios();
+                }
+                if (boton==32){
+                    rotarSprite(pieza);
+                    generarCambios();
+                }
+                if (boton==40){
+                    tirarPieza(pieza);
+                    generarCambios();
+                }
+            }
+            //System.out.println("codigo de tecla: "+control.tecla);
+
+
+            /*
+            cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
+            //cable.mostrarMatriz();
+            ventana.refrescar(cable.MatrizPantalla);
+            */
+            //TimeUnit.SECONDS.sleep(1);
+
+        }
+    }
+
+    public void graved() throws InterruptedException {
+        while(true){
             moverSprite("A", pieza);
             revisarFondo(pieza);
-            cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
-            cable.mostrarMatriz();
-            ventana.refrescar(cable.MatrizPantalla);
+            //cable.mostrarMatriz();
+            generarCambios();
             TimeUnit.SECONDS.sleep(1);
 
         }
 
+        }
 
 
+    @Override
+    public void run() {
+        new Thread(() -> {
+            try {
+                this.graved();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        new Thread(() -> {
+            try {
+                this.empezar();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
     }
 
@@ -132,6 +195,7 @@ public class Juego {
 
 
     }
+
     public void botonIzquierdo(Pieza pieza){
         for (int i=0;i<=7;i=i+2) {
             int tempx = (int) pieza.listaBloques().get(i);
@@ -151,13 +215,10 @@ public class Juego {
             int tempx = (int) pieza.listaBloques().get(i);
             int tempy = (int) pieza.listaBloques().get(i + 1);
 
-            System.out.println("x: "+tempx);
             if (tempx+1==10){
-                System.out.println("Pegó con cerca");
                 return;
             }
             if(matrizAcumulados[tempx+1][tempy]==1){
-                System.out.println("Pegó con cerca");
                 return;
             }
 
@@ -166,10 +227,10 @@ public class Juego {
     }
 
     public void rotarSprite(Pieza pieza){
-        matetriz[pieza.centro[0]][pieza.centro[1]]=0;
-        matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=0;
-        matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=0;
-        matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=0;
+        matetriz[pieza.centro[0]][pieza.centro[1]]=5;
+        matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=5;
+        matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=5;
+        matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=5;
 
         pieza.rotarPieza(pieza.forma);
 
@@ -216,6 +277,7 @@ public class Juego {
                 }
                 if (linea==10){
                     System.out.println("linea completa: "+i);
+                    linea=0;
                     eliminarLinea(i);
                     }
         }
@@ -226,9 +288,11 @@ public class Juego {
         for (int j=linea; j>= 1; j--) {
             for (int i = 0; i <= 9; i++) {
                 matetriz[i][j]=matetriz[i][j-1];
+                matrizAcumulados[i][j]=matrizAcumulados[i][j-1];
 
                 if (j == 0) {
                     matetriz[i][j + 1] = 0;
+                    matrizAcumulados[i][j + 1] = 0;
                     }
                 }
             }
@@ -256,8 +320,40 @@ public class Juego {
 
     }
 
+    public void generarCambios(){
+        cable.insertarMatriz(cable.ReescalarPixeles(matetriz), 2);
+        System.out.println("generando cambios");
+        for (int i=0;i<=49;i++){
+            for (int j=0;j<=49;j++){
+                int color=cable.MatrizPantalla[i][j];
+                if (color!=8){
+                    if (color!=5) {
+                        int[] pixel = new int[3];
+                        pixel[0] = i;
+                        pixel[1] = j;
+                        pixel[2] = cable.MatrizPantalla[i][j];
+                        //System.out.println("color : " + pixel[2] + " en x :" + pixel[0] + " y " + pixel[1]);
+                        listaCambios.add(pixel);
+                    }
+                }
+            }
+        }
+        //System.out.println("tamaño de los cambios: "+listaCambios.size());
+        ventana.actualizarCambios(listaCambios);
+        listaCambios=new LinkedList();
+        /*
+        cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
+        //cable.mostrarMatriz();
+        ventana.refrescar(cable.MatrizPantalla);*/
+    }
+
+
 
     public static void main(String[] args) throws InterruptedException {
     Juego game=new Juego();
-        game.empezar();
-    }}
+        game.run();
+
+    }
+
+
+}
