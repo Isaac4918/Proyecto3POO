@@ -17,6 +17,8 @@ public class Juego extends Thread {
     public LinkedList listaCambios=new LinkedList();
     public int[][] matetriz=new int[10][20];
     public int[][] matrizAcumulados=new int[10][20];
+    int fondo1=0;
+    int fondo2=10;
 
     public void empezar() throws InterruptedException {
         this.crearMatriz();
@@ -33,7 +35,7 @@ public class Juego extends Thread {
         //mostrarMatriz();
         int boton=0;
         while(true){
-            //System.out.println("boton: "+boton);
+            System.out.println("boton: "+boton);
             if (boton!=control.tecla){
                 boton=control.tecla;
                 System.out.println("boton: "+boton);
@@ -164,10 +166,10 @@ public class Juego extends Thread {
     }
 
     public void moverSprite(String direccion,Pieza pieza){
-            matetriz[pieza.centro[0]][pieza.centro[1]]=5;
-            matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=5;
-            matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=5;
-            matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=5;
+            matetriz[pieza.centro[0]][pieza.centro[1]]=fondo2;
+            matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=fondo2;
+            matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=fondo2;
+            matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=fondo2;
 
             pieza.moverPieza(direccion);
 
@@ -227,10 +229,10 @@ public class Juego extends Thread {
     }
 
     public void rotarSprite(Pieza pieza){
-        matetriz[pieza.centro[0]][pieza.centro[1]]=5;
-        matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=5;
-        matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=5;
-        matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=5;
+        matetriz[pieza.centro[0]][pieza.centro[1]]=fondo2;
+        matetriz[pieza.bloque1[0]][pieza.bloque1[1]]=fondo2;
+        matetriz[pieza.bloque2[0]][pieza.bloque2[1]]=fondo2;
+        matetriz[pieza.bloque3[0]][pieza.bloque3[1]]=fondo2;
 
         pieza.rotarPieza(pieza.forma);
 
@@ -256,7 +258,7 @@ public class Juego extends Thread {
     public void crearMatriz(){
         for (int i=0; i <= 19; i++){
             for (int j=0; j <= 9;j++){
-                matetriz[j][i]=5;
+                matetriz[j][i]=fondo2;
             }
         }
         for (int i=0; i <= 19; i++){
@@ -326,15 +328,27 @@ public class Juego extends Thread {
         for (int i=0;i<=49;i++){
             for (int j=0;j<=49;j++){
                 int color=cable.MatrizPantalla[i][j];
-                if (color!=8){
-                    if (color!=5) {
+                if (color!=14){
                         int[] pixel = new int[3];
                         pixel[0] = i;
                         pixel[1] = j;
-                        pixel[2] = cable.MatrizPantalla[i][j];
-                        //System.out.println("color : " + pixel[2] + " en x :" + pixel[0] + " y " + pixel[1]);
+
+                        if (color==1){
+                            pixel[2]=11;
+                        }
+                        if (color==2){
+                            pixel[2]=9;
+                        }
+                        if (color==3){
+                            pixel[2]=6;
+                        }
+                        if (color==4){
+                            pixel[2]=2;
+                        }else{
+                            pixel[2]=color;
+                        }
+                        System.out.println("color : " + pixel[2] + " en x :" + pixel[0] + " y " + pixel[1]);
                         listaCambios.add(pixel);
-                    }
                 }
             }
         }

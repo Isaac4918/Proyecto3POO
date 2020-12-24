@@ -79,14 +79,14 @@ public class Pieza {
                 bloque3[1] = centro[1];
             }
             if (caso==2) {
-                bloque1[0] = centro[0]-1;
-                bloque1[1] = centro[1];
+                bloque1[0] = centro[0];
+                bloque1[1] = centro[1]-1;
 
-                bloque2[0] = centro[0]+1;
-                bloque2[1] = centro[1];
+                bloque2[0] = centro[0];
+                bloque2[1] = centro[1]+1;
 
-                bloque3[0] = centro[0];
-                bloque3[1] = centro[1]+1;
+                bloque3[0] = centro[0]+1;
+                bloque3[1] = centro[1];
             }
             if (caso==3) {
                 bloque1[0] = centro[0]+1;
@@ -182,8 +182,24 @@ public class Pieza {
                 }
             }
         }
-        if (caso==3){
-            caso=0;
+        if (forma==3){
+            if (caso==2){
+                if (centro[0]==0){
+                    centro[0]=1;
+                    caso = 3;
+                    this.actualizarPieza();
+                }
+            }
+            if (caso==4){
+                if (centro[0]==9){
+                    centro[0]=8;
+                    caso = 1;
+                    this.actualizarPieza();
+                }
+            }
+        }
+        if (caso==4){
+            caso=1;
             this.actualizarPieza();
         }else {
             caso += 1;
@@ -196,7 +212,7 @@ public class Pieza {
             centro[1]=1;
             caso=1;
             int randomNum = ThreadLocalRandom.current().nextInt(1, 5);
-            forma=4;
+            forma=randomNum;
             this.actualizarPieza();
 
 

@@ -33,7 +33,7 @@ public class CableApantalla<matrizGrande> {
     public void crearMatriz(){
         for (int i=0; i <= 49; i++){
             for (int j=0; j <= 49;j++){
-                MatrizPantalla[j][i]=8;
+                MatrizPantalla[j][i]=14;
             }
         }
     }
