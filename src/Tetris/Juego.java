@@ -1,16 +1,17 @@
 package Tetris;
 
 
+import Pong.Figura;
 import control.VentanaControl;
-import pantalla.Pantalla;
 import pantalla.Ventana;
+import sockets.Client;
 
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 public class Juego extends Thread {
     public MatrisTetris Matriz50pxls=new MatrisTetris();
-    Ventana ventana=new Ventana();;
+    //Ventana ventana=new Ventana();;
     CableApantalla cable=new CableApantalla();
     Pieza pieza=new Pieza(1);
     VentanaControl control=new VentanaControl();
@@ -19,26 +20,21 @@ public class Juego extends Thread {
     public int[][] matrizAcumulados=new int[10][20];
     int fondo1=0;
     int fondo2=10;
+    String jsonStr;
+    Client client = new Client(9999);
 
     public void empezar() throws InterruptedException {
         this.crearMatriz();
         cable.insertarMatriz(cable.ReescalarPixeles(matetriz), 2);
         cable.mostrarMatriz();
-        ventana.introducirFondo(cable.MatrizPantalla);
-        //generarCambios();
-        //this.mostrarMatriz();
         insertarPieza(pieza);
-        //mostrarMatriz();
-        //generarCambios();
 
-        //rotarSprite(pieza);
-        //mostrarMatriz();
         int boton=0;
         while(true){
-            System.out.println("boton: "+boton);
+            //System.out.println("boton: "+boton);
             if (boton!=control.tecla){
                 boton=control.tecla;
-                System.out.println("boton: "+boton);
+                //System.out.println("boton: "+boton);
                 if (boton==37){
                     System.out.println("BOTON IZQUIERDO");
                     botonIzquierdo(pieza);
@@ -62,24 +58,15 @@ public class Juego extends Thread {
                     generarCambios();
                 }
             }
-            //System.out.println("codigo de tecla: "+control.tecla);
 
-
-            /*
-            cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
-            //cable.mostrarMatriz();
-            ventana.refrescar(cable.MatrizPantalla);
-            */
-            //TimeUnit.SECONDS.sleep(1);
 
         }
     }
 
-    public void graved() throws InterruptedException {
+    public void gravity() throws InterruptedException {
         while(true){
             moverSprite("A", pieza);
             revisarFondo(pieza);
-            //cable.mostrarMatriz();
             generarCambios();
             TimeUnit.SECONDS.sleep(1);
 
@@ -92,7 +79,7 @@ public class Juego extends Thread {
     public void run() {
         new Thread(() -> {
             try {
-                this.graved();
+                this.gravity();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -142,11 +129,6 @@ public class Juego extends Thread {
             return true;
 
         }
-        //System.out.println("y inferior : "+yBloqueInferior);
-        //System.out.println("Bloque x menor: "+xBloqueInferior);
-        //System.out.println("Bloque x mayor: "+xBloqueSuperior);
-        //System.out.println("Bloque y menor: "+yBloqueInferior);
-
 
         return false;
     }
@@ -191,7 +173,7 @@ public class Juego extends Thread {
                 break;
             }
             moverSprite("A", pieza);
-            mostrarMatriz();
+            //mostrarMatriz();
 
         }
 
@@ -225,7 +207,7 @@ public class Juego extends Thread {
             }
 
         }moverSprite("D", pieza);
-        mostrarMatriz();
+        //mostrarMatriz();
     }
 
     public void rotarSprite(Pieza pieza){
@@ -278,7 +260,7 @@ public class Juego extends Thread {
                     }
                 }
                 if (linea==10){
-                    System.out.println("linea completa: "+i);
+                    //System.out.println("linea completa: "+i);
                     linea=0;
                     eliminarLinea(i);
                     }
@@ -347,25 +329,43 @@ public class Juego extends Thread {
                         }else{
                             pixel[2]=color;
                         }
-                        System.out.println("color : " + pixel[2] + " en x :" + pixel[0] + " y " + pixel[1]);
+                        //System.out.println("color : " + pixel[2] + " en x :" + pixel[0] + " y " + pixel[1]);
                         listaCambios.add(pixel);
                 }
             }
         }
-        //System.out.println("tamaño de los cambios: "+listaCambios.size());
-        ventana.actualizarCambios(listaCambios);
+
+
+        infoAJson(listaCambios);
+        client.mensaje = this.jsonStr;
+
         listaCambios=new LinkedList();
-        /*
-        cable.insertarMatriz(cable.ReescalarPixeles(matetriz),9);
-        //cable.mostrarMatriz();
-        ventana.refrescar(cable.MatrizPantalla);*/
+    }
+
+    public void infoAJson(LinkedList lista){
+        this.jsonStr = "{\"posiciones\":[";
+        for(int a = 0; a < lista.size(); a++){
+            int[] tmp = (int[]) lista.get(a);
+            jsonStr += "{";
+            int posx = tmp[0];
+            int posy = tmp[1];
+            int color = tmp[2];
+            jsonStr += "\"posx\":" + String.valueOf(posx) + ",";
+
+            if(a < lista.size()-1){
+                jsonStr += "\"posy\":" + String.valueOf(posy) + ",\"color\":" + String.valueOf(color) + "},";
+            }else if(a == lista.size()-1){
+                jsonStr += "\"posy\":" + String.valueOf(posy) + ",\"color\":" + String.valueOf(color) + "}";
+            }
+        }
+        jsonStr += "]}";
     }
 
 
 
     public static void main(String[] args) throws InterruptedException {
-    Juego game=new Juego();
-        game.run();
+        Juego game=new Juego();
+            game.run();
 
     }
 

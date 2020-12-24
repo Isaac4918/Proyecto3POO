@@ -27,6 +27,8 @@ public class MainPantalla {
             try {
                 JSONObject test = new JSONObject(server.mensaje);
                 JSONArray posiciones = test.getJSONArray("posiciones");
+                System.out.println("entré");
+                System.out.println(server.mensaje);
 
                 for (int i = 0; i < posiciones.length(); i++){
                     JSONObject posicion = posiciones.getJSONObject(i);
@@ -40,7 +42,7 @@ public class MainPantalla {
 
                 ventana1.actualizarCambios(cambios);
             }catch (NullPointerException e){
-                System.out.println("");
+                //System.out.println("");
             }
         }
 

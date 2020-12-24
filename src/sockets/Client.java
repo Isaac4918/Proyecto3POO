@@ -29,7 +29,9 @@ public class Client implements Runnable{
                 DataInputStream inputStream = new DataInputStream(socket.getInputStream());
 
                 while (true) {
-                    outputStream.writeUTF(this.mensaje);
+                    if(this.mensaje != null){
+                        outputStream.writeUTF(this.mensaje);
+                    }
                 }
 
 

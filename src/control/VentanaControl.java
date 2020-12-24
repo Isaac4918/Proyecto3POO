@@ -7,6 +7,7 @@ import javax.swing.*;
     public class VentanaControl extends JFrame {
         private JPanel contenido=new JPanel();
         public int tecla=0;
+        public String jsonStr;
 
         public VentanaControl() throws HeadlessException {
             JTextField campoTexto=new JTextField();
@@ -15,7 +16,6 @@ import javax.swing.*;
             KeyListener escuharTeclado=new KeyListener() {
                 @Override
                 public void keyTyped(KeyEvent e) {
-
 
                 }
 
@@ -40,7 +40,11 @@ import javax.swing.*;
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setVisible(true);
 
+        }
 
+        public void convertirInfo(int teclaPresionada){
+            jsonStr = "{\"teclas\":[";
+            jsonStr += "{\"tecla\":" + String.valueOf(teclaPresionada) + "}]}";
         }
     }
 
