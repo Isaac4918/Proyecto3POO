@@ -10,8 +10,6 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 public class Juego extends Thread {
-    public MatrisTetris Matriz50pxls=new MatrisTetris();
-    //Ventana ventana=new Ventana();;
     CableApantalla cable=new CableApantalla();
     Pieza pieza=new Pieza(1);
     VentanaControl control=new VentanaControl();
