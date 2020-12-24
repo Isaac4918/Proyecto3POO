@@ -12,20 +12,15 @@ public class Ventana {
         frame.add(pixeles);
         frame.setSize(616,639);
         frame.setVisible(true);
-
-
     }
+
     public void refrescar(int[][] matriz){
         pixeles.actualizarMatriz(matriz);
-
-    }
-    public void introducirFondo(int[][] matriz){
-        pixeles.matrizFondo=matriz;
     }
 
     public void actualizarCambios(LinkedList cambios){
 
-        pixeles.matriz=pixeles.matrizFondo;
+        pixeles.matriz=crearMatriz();
 
         if (cambios.size()>1) {
             for (int i = 0; i <= cambios.size() - 1; i++) {
@@ -43,13 +38,8 @@ public class Ventana {
         int[][] matriz=new int[50][50];
         for (int i = 0; i <= 49; i++) {
             for (int j = 0; j <= 49; j++) {
-                matriz[i][j]=0;
-
+                matriz[i][j]=14;
             }
         }return matriz;
     }
 }
-
-
-
-
